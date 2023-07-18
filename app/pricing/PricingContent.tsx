@@ -25,8 +25,6 @@ const PricingContent: React.FC = () => {
       </div>
       <div className="hidden md:flex flex-col mt-20 md:mt-0 justify-center items-center w-[100vw] h-[1440px]">
         <h1
-          data-aos="zoom-in-up"
-          data-aos-duration="1500"
           className="text-6xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-100 to-blue-500 drop-shadow-md hover:drop-shadow-xl"
         >
           Compare our plans in detail.

@@ -1,4 +1,14 @@
+"use client";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useState, useEffect } from "react";
+
 const PlanTables: React.FC = () => {
+    useEffect(() => {
+        AOS.init();
+        AOS.refresh();
+      }, []);
+
   return (
     <table className=" w-5/6 mt-4 table-auto">
       <thead>
