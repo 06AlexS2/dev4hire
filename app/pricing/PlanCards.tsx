@@ -91,7 +91,7 @@ const PlanCards: React.FC = () => {
             data-aos-duration="1500"
           >
             <div className="p-4 flex-4">
-              <h1 className="text-xl font-bold text-blue-500">{plan.name}</h1>
+              <h1 className="text-xl font-extrabold text-blue-500">{plan.name}</h1>
               <ul className="mt-4">
                 {plan.features.map((feature) => (
                   <li
@@ -106,7 +106,7 @@ const PlanCards: React.FC = () => {
               </ul>
               <h2
                 id="price-tag"
-                className="text-2xl text-center mt-2 font-black text-blue-500 mb-[-10px]"
+                className="text-3xl font-extrabold text-center mt-20 text-white"
               >
                 {plan.price}
               </h2>
