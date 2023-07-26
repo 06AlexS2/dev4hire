@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FaBars, FaTimesCircle } from "react-icons/fa";
+import { ThreeBars } from "./ThreeBars";
 
 export default function NavBar(props: any) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,13 +23,14 @@ export default function NavBar(props: any) {
                 Hire
               </a>
             </div>
-            <div className="md:hidden">
+            <div className="md:hidden flex flex-row items-center">
               <button
                 type="button"
                 className="text-white hover:text-gray-300 text-[28px] transition-transform"
                 onClick={toggleMenu}
               >
-                {isOpen ? <FaTimesCircle/> : <FaBars/>}
+                {/**{isOpen ? <FaTimesCircle/> : <FaBars/>}*/}
+                <ThreeBars isClicked={isOpen}/>
               </button>
             </div>
             <ul
@@ -60,12 +62,20 @@ export default function NavBar(props: any) {
                   Pricing
                 </a>
               </li>
+              <li>
+                <a
+                  href="/register"
+                  className="text-white hover:text-blue-400 hover:transition-[color]  text-[24px]"
+                >
+                  Register
+                </a>
+              </li>
             </ul>
           </div>
         </div>
         <div
           className={`bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg transition-all duration-500 ${
-            isOpen ? "block" : "hidden"
+            isOpen ? "block animate-fade-down animate-duration-500" : "hidden"
           } md:hidden`}
         >
           <div className="container mx-auto p-4">
@@ -92,6 +102,14 @@ export default function NavBar(props: any) {
                   className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
                 >
                   Pricing
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/register"
+                  className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
+                >
+                  Register
                 </a>
               </li>
             </ul>
