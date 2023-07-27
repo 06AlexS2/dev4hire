@@ -5,6 +5,7 @@ export const RegisterForm: React.FC = () => {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
@@ -63,7 +64,7 @@ export const RegisterForm: React.FC = () => {
             <input
               type="text"
               className="border w-full text-base px-8 py-2 focus:outline-none focus:ring-0 focus:border-blue-500 rounded-lg bg-transparent text-white"
-              placeholder="ej. Durden"
+              placeholder="e.g. Durden"
               value={lastName}
               id="lastname_field"
               onChange={(e) => setLastName(e.target.value)}
@@ -80,10 +81,24 @@ export const RegisterForm: React.FC = () => {
             <input
               type="email"
               className="border w-full text-base px-8 py-2 mb-2 focus:outline-none focus:ring-0 focus:border-blue-500 rounded-lg bg-transparent text-white"
-              placeholder="ej. narrator@email.com"
+              placeholder="e.g. narrator@email.com"
               value={email}
               id="email_field"
               onChange={(e) => setEmail(e.target.value)}
+            />
+            <label
+              htmlFor="username-field"
+              className="block text-base mb-2 text-white"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              className="border w-full text-base px-8 py-2 mb-2 focus:outline-none focus:ring-0 focus:border-blue-500 rounded-lg bg-transparent text-white"
+              placeholder="e.g. FightClubLeader"
+              value={username}
+              id="username_field"
+              onChange={(e) => setUsername(e.target.value)}
             />
             <label
               htmlFor="password-field"
