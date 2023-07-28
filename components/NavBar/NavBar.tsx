@@ -62,12 +62,12 @@ export default function NavBar(props: any) {
                   Pricing
                 </a>
               </li>
-              <li>
+              <li className="group border-2 border-[white] hover:border-blue-400 hover:transition-[color] rounded-lg w-auto">
                 <a
-                  href="/register"
-                  className="text-white hover:text-blue-400 hover:transition-[color]  text-[24px]"
+                  href="/auth/login"
+                  className="text-white mx-2 group-hover:text-blue-400 hover:transition-[color]  text-[24px]"
                 >
-                  Register
+                  Login
                 </a>
               </li>
             </ul>

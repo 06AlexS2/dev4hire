@@ -1,36 +1,75 @@
 "use client";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const RegisterForm: React.FC = () => {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleRegister = (): void => {
-    setIsRegistering(true);
-    // Here you can perform your actual registration logic.
-    // For demonstration purposes, let's simulate a registration delay using setTimeout.
-    setTimeout(() => {
-      setIsRegistering(false);
-    }, 5000); // Simulating registration delay of 5 seconds.
-  };
+  // const handleRegister = (): void => {
+  //   setIsRegistering(true);
+  //   // Here you can perform your actual registration logic.
+  //   // For demonstration purposes, let's simulate a registration delay using setTimeout.
+  //   setTimeout(() => {
+  //     setIsRegistering(false);
+  //     toast.success("Successfully registered!");
+  //   }, 5000); // Simulating registration delay of 5 seconds.
+  // };
   const handleClick = (): void => {
     setIsClicked(true);
   };
   const handleRelease = (): void => {
     setIsClicked(false);
   };
-  const handleSubmit = (): void => {};
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setIsRegistering(true);
+
+    try {
+      const verify = await axios.post("api/register/validate", {
+        username,
+        email,
+      });
+      if (verify.status === 200) {
+        // setIsRegistering(false);
+        // toast.success(verify.data.message);
+        const { data } = await axios.post("/api/register", {
+          name,
+          last_name: lastName,
+          password,
+          role,
+          username,
+          email,
+        });
+        if (data) {
+          toast.success("Successfully registered!");
+          setTimeout(() => {
+            router.push("/");
+          }, 3000);
+        }
+      }
+    } catch (error: any) {
+      setIsRegistering(false);
+      toast.error(error.response.data.error);
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center h-auto mt-12">
+      <Toaster />
       {/** inicio del form */}
-      <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg bg-clip-padding w-[95%] h-[550px] p-6 rounded-xl shadow-xl overflow-y-scroll animate-fade-up">
+      <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg bg-clip-padding w-[95%] h-[550px] p-6 rounded-xl shadow-xl overflow-y-scroll animate-fade-right">
         <form onSubmit={handleSubmit}>
           {/**div del contenido del form */}
           {/**div del titulo del contenido del form */}
@@ -63,7 +102,7 @@ export const RegisterForm: React.FC = () => {
             <input
               type="text"
               className="border w-full text-base px-8 py-2 focus:outline-none focus:ring-0 focus:border-blue-500 rounded-lg bg-transparent text-white"
-              placeholder="ej. Durden"
+              placeholder="e.g. Durden"
               value={lastName}
               id="lastname_field"
               onChange={(e) => setLastName(e.target.value)}
@@ -80,10 +119,24 @@ export const RegisterForm: React.FC = () => {
             <input
               type="email"
               className="border w-full text-base px-8 py-2 mb-2 focus:outline-none focus:ring-0 focus:border-blue-500 rounded-lg bg-transparent text-white"
-              placeholder="ej. narrator@email.com"
+              placeholder="e.g. narrator@email.com"
               value={email}
               id="email_field"
               onChange={(e) => setEmail(e.target.value)}
+            />
+            <label
+              htmlFor="username-field"
+              className="block text-base mb-2 text-white"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              className="border w-full text-base px-8 py-2 mb-2 focus:outline-none focus:ring-0 focus:border-blue-500 rounded-lg bg-transparent text-white"
+              placeholder="e.g. FightClubLeader"
+              value={username}
+              id="username_field"
+              onChange={(e) => setUsername(e.target.value)}
             />
             <label
               htmlFor="password-field"
@@ -140,7 +193,7 @@ export const RegisterForm: React.FC = () => {
             </div>
             {checked ? (
               <button
-                type="button" // Change type to "button" to prevent form submission
+                type="submit" // Change type to "button" to prevent form submission
                 disabled={isRegistering} // Disable the button when registering
                 className={`flex flex-col mx-auto mt-5 items-center justify-center ${
                   isRegistering
@@ -152,7 +205,6 @@ export const RegisterForm: React.FC = () => {
                 onMouseDown={handleClick}
                 onMouseUp={handleRelease}
                 onMouseLeave={handleRelease}
-                onClick={handleRegister} // Call the handleRegister function on click
               >
                 {isRegistering ? (
                   <div className="flex items-center">
@@ -164,6 +216,11 @@ export const RegisterForm: React.FC = () => {
                 )}
               </button>
             ) : null}
+            <div>
+              <h3 className="text-white text-md mt-2">
+                Already a member? <Link className=" text-white hover:text-blue-500 transition-colors" href={"/auth/login"}>Login</Link>
+              </h3>
+            </div>
           </div>
         </form>
       </div>
