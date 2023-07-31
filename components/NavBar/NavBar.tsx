@@ -1,9 +1,12 @@
 "use client";
 import { useState } from "react";
-import { FaBars, FaTimesCircle } from "react-icons/fa";
 import { ThreeBars } from "./ThreeBars";
+import { useSession, signOut } from "next-auth/react";
 
 export default function NavBar(props: any) {
+  const { data } = useSession();
+  console.log(data);
+  const name = data?.user?.email;
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -15,7 +18,10 @@ export default function NavBar(props: any) {
         <div className=" bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg">
           <div className="container mx-auto flex items-center justify-between p-6">
             <div>
-              <a href="/" className="group text-white hover:text-blue-500 hover:transition-colors text-[24px]">
+              <a
+                href="/"
+                className="group text-white hover:text-blue-500 hover:transition-colors text-[24px]"
+              >
                 Dev
                 <span className="font-bold text-blue-500 group-hover:text-white group-hover:transition-colors">
                   4
@@ -30,7 +36,7 @@ export default function NavBar(props: any) {
                 onClick={toggleMenu}
               >
                 {/**{isOpen ? <FaTimesCircle/> : <FaBars/>}*/}
-                <ThreeBars isClicked={isOpen}/>
+                <ThreeBars isClicked={isOpen} />
               </button>
             </div>
             <ul
@@ -62,14 +68,25 @@ export default function NavBar(props: any) {
                   Pricing
                 </a>
               </li>
-              <li className="group border-2 border-[white] hover:border-blue-400 hover:transition-[color] rounded-lg w-auto">
-                <a
-                  href="/auth/login"
-                  className="text-white mx-2 group-hover:text-blue-400 hover:transition-[color]  text-[24px]"
-                >
-                  Login
-                </a>
-              </li>
+              {data?.user ? (
+                <li>
+                  <a
+                    href="#"
+                    className="text-white mx-2 hover:text-blue-400 hover:transition-[color]  text-[24px]"
+                  >
+                    Hi, {data.user.name}
+                  </a>
+                </li>
+              ) : (
+                <li className="group border-2 border-[white] hover:border-blue-400 hover:transition-[color] rounded-lg w-auto">
+                  <a
+                    href="/auth/login"
+                    className="text-white mx-2 group-hover:text-blue-400 hover:transition-[color]  text-[24px]"
+                  >
+                    Login
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

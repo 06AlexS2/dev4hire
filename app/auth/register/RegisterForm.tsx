@@ -4,6 +4,7 @@ import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export const RegisterForm: React.FC = () => {
   const router = useRouter();
@@ -37,7 +38,7 @@ export const RegisterForm: React.FC = () => {
     setIsRegistering(true);
 
     try {
-      const verify = await axios.post("api/register/validate", {
+      const verify = await axios.post("/api/register/validate", {
         username,
         email,
       });
@@ -54,9 +55,19 @@ export const RegisterForm: React.FC = () => {
         });
         if (data) {
           toast.success("Successfully registered!");
-          setTimeout(() => {
-            router.push("/");
-          }, 3000);
+          const res = await signIn("credentials", {
+            username: email,
+            password: password,
+            redirect: false,
+          });
+          console.log(res);
+
+          if (res?.ok && !res.error) {
+            toast.success("Login successful.");
+            setTimeout(() => {
+              router.push("/");
+            }, 3000);
+          }
         }
       }
     } catch (error: any) {
@@ -218,7 +229,13 @@ export const RegisterForm: React.FC = () => {
             ) : null}
             <div>
               <h3 className="text-white text-md mt-2">
-                Already a member? <Link className=" text-white hover:text-blue-500 transition-colors" href={"/auth/login"}>Login</Link>
+                Already a member?{" "}
+                <Link
+                  className=" text-white hover:text-blue-500 transition-colors"
+                  href={"/auth/login"}
+                >
+                  Login
+                </Link>
               </h3>
             </div>
           </div>

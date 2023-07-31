@@ -31,6 +31,7 @@ export const LoginForm: React.FC = () => {
   };
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLogging(true);
     const res = await signIn("credentials", {
       redirect: false,
       username: username,
@@ -47,7 +48,7 @@ export const LoginForm: React.FC = () => {
       toast.success("Login successful.");
       setTimeout(() => {
         router.push("/");
-      }, 3000);
+      }, 1500);
     }
 
   };

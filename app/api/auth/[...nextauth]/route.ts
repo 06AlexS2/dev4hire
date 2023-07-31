@@ -17,16 +17,16 @@ const handler = NextAuth({
       async authorize(credentials) {
         const query =
           "SELECT email, password FROM users WHERE email = $1 OR username = $1";
-        const foundUser = await conn.query(query, [credentials?.username]);
-        console.log(foundUser);
-        if (foundUser.rows.length == 0)
-          throw new Error(`User ${credentials?.username} not found.`)
+        const user = await conn.query(query, [credentials?.username]);
+        if (user.rows.length == 0)
+          throw new Error(`User ${credentials?.username} not found.`);
         const passwordVerification = await compare(
           credentials?.password as string,
-          foundUser.rows[0].password
+          user.rows[0].password
         );
-        if (!passwordVerification) throw new Error("Incorrect password.");
-        return foundUser;
+        if (!passwordVerification) throw new Error("Incorrect Password.");
+        console.log(user);
+        return user;
       },
     }),
   ],
@@ -39,10 +39,11 @@ const handler = NextAuth({
       if (user) token.user = user;
       return token;
     },
-    session({ session, token }) {
+    session: async ({ session, token }) => {
       //this is for retrieving from the backend and returning the user data to the frontend
       session.user = token.user as any;
-      return session;
+      console.log(token.user);
+      return Promise.resolve(session);
     },
     // session: async ({ session, token }) => {
     //   const user = await User.findOne({email: session.user.email});
