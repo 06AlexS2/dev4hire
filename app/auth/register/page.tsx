@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   };
 export default function RegisterPage() {
     return (
-        <main className="flex items-center justify-center w-[100vw] h-screen bg-gray-800">
+        <main className="bg-[url('../public/background-img/login-register.svg')] bg-no-repeat bg-cover flex items-center justify-center w-[100vw] h-screen bg-gray-800">
             <RegisterForm />
         </main>
     )

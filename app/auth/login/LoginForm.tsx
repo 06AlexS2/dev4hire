@@ -12,7 +12,6 @@ export const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isClicked, setIsClicked] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
-  const [LoginError, setLoginError] = useState("");
 
   // const handleRegister = (): void => {
   //   setIsRegistering(true);
@@ -37,7 +36,6 @@ export const LoginForm: React.FC = () => {
       username: username,
       password: password,
     });
-    console.log(res);
 
     if (res?.error) {
       toast.error(res.error);

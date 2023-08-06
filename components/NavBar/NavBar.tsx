@@ -1,24 +1,94 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ThreeBars } from "./ThreeBars";
 import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import { FaUser } from "react-icons/fa";
+import { UserOptions } from "./UserOptions";
+
+interface NavBarLinks {
+  label: string;
+  route: string;
+  liClass: string;
+  aClass: string;
+}
+
+const normalLinks: NavBarLinks[] = [
+  {
+    label: "Home",
+    route: "/",
+    liClass: "",
+    aClass:
+      "text-white hover:text-blue-400 hover:transition-[color] text-[24px]",
+  },
+  {
+    label: "About",
+    route: "/about",
+    liClass: "",
+    aClass:
+      "text-white hover:text-blue-400 hover:transition-[color] text-[24px]",
+  },
+  {
+    label: "Pricing",
+    route: "/pricing",
+    liClass: "",
+    aClass:
+      "text-white hover:text-blue-400 hover:transition-[color] text-[24px]",
+  },
+  {
+    label: "Login",
+    route: "/auth/login",
+    liClass:
+      "group border-2 border-[white] hover:border-blue-400 hover:transition-[color] rounded-lg w-auto",
+    aClass:
+      "text-white mx-2 group-hover:text-blue-400 hover:transition-[color]  text-[24px]",
+  },
+];
+
+const userLinks: NavBarLinks[] = [
+  {
+    label: "Home",
+    route: "/",
+    liClass: "",
+    aClass:
+      "text-white hover:text-blue-400 hover:transition-[color] text-[24px]",
+  },
+  {
+    label: "About",
+    route: "/about",
+    liClass: "",
+    aClass:
+      "text-white hover:text-blue-400 hover:transition-[color] text-[24px]",
+  },
+  {
+    label: "Pricing",
+    route: "/pricing",
+    liClass: "",
+    aClass:
+      "text-white hover:text-blue-400 hover:transition-[color] text-[24px]",
+  },
+];
 
 export default function NavBar(props: any) {
   const { data } = useSession();
-  console.log(data);
-  const name = data?.user?.email;
   const [isOpen, setIsOpen] = useState(false);
+  const [isUserCardOpen, setIsUserCardOpen] = useState(false);
 
-  const toggleMenu = () => {
+  const handleUserCard = (): void => {
+    setIsUserCardOpen(!isUserCardOpen);
+  };
+
+  const toggleMenu = (): void => {
     setIsOpen(!isOpen);
   };
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 w-[100vw]">
         <div className=" bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg">
           <div className="container mx-auto flex items-center justify-between p-6">
-            <div>
-              <a
+            <div className="flex flex-row justify-between items-center">
+              <Link
                 href="/"
                 className="group text-white hover:text-blue-500 hover:transition-colors text-[24px]"
               >
@@ -27,7 +97,7 @@ export default function NavBar(props: any) {
                   4
                 </span>
                 Hire
-              </a>
+              </Link>
             </div>
             <div className="md:hidden flex flex-row items-center">
               <button
@@ -44,95 +114,101 @@ export default function NavBar(props: any) {
                 isOpen ? "flex flex-col" : ""
               }`}
             >
-              <li>
-                <a
-                  href="/"
-                  className="text-white hover:text-blue-400 hover:transition-[color]  text-[24px]"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/about"
-                  className="text-white hover:text-blue-400 hover:transition-[color]  text-[24px]"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/pricing"
-                  className="text-white hover:text-blue-400 hover:transition-[color]  text-[24px]"
-                >
-                  Pricing
-                </a>
-              </li>
-              {data?.user ? (
+              {data?.user
+                ? userLinks.map(({ label, route, liClass, aClass }) => (
+                    <li key={route} className={liClass}>
+                      <Link href={route} className={aClass}>
+                        {label}
+                      </Link>
+                    </li>
+                  ))
+                : normalLinks.map(({ label, route, liClass, aClass }) => (
+                    <li key={route} className={liClass}>
+                      <Link href={route} className={aClass}>
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+              {data?.user && (
                 <li>
-                  <a
-                    href="#"
-                    className="text-white mx-2 hover:text-blue-400 hover:transition-[color]  text-[24px]"
+                  <button
+                    id="user-card"
+                    onClick={handleUserCard}
+                    className="group text-white text-[24px] hover:text-blue-500 transition-colors flex items-center"
                   >
-                    Hi, {data.user.name}
-                  </a>
-                </li>
-              ) : (
-                <li className="group border-2 border-[white] hover:border-blue-400 hover:transition-[color] rounded-lg w-auto">
-                  <a
-                    href="/auth/login"
-                    className="text-white mx-2 group-hover:text-blue-400 hover:transition-[color]  text-[24px]"
-                  >
-                    Login
-                  </a>
+                    {data.user.name}
+                    <span className="border-2 border-white group-hover:border-blue-500 rounded-full ml-2">
+                      <FaUser className="text-[24px] m-[6px]" />
+                    </span>
+                  </button>
                 </li>
               )}
             </ul>
           </div>
         </div>
+        {/** mobile navbar */}
         <div
           className={`bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg transition-all duration-500 ${
             isOpen ? "block animate-fade-down animate-duration-500" : "hidden"
           } md:hidden`}
         >
           <div className="container mx-auto p-4">
-            <ul className="flex flex-col space-y-4 text-white">
-              <li>
-                <a
-                  href="/"
-                  className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/about"
-                  className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/pricing"
-                  className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
-                >
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/register"
-                  className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
-                >
-                  Register
-                </a>
-              </li>
-            </ul>
+            {data?.user ? (
+              <ul className="flex flex-col space-y-4 text-white">
+                <li className="text-white text-[24px] hover:text-blue-500 transition-colors flex items-center justify-center">
+                  {data.user.name}
+                  <span className="border-2 border-white rounded-full ml-2">
+                    <FaUser className=" text-[20px] m-1" />
+                  </span>
+                </li>
+                <li>
+                  <Link
+                    href="/dashboard"
+                    className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                {userLinks.map(({ label, route }) => (
+                  <li key={route}>
+                    <Link
+                      href={route}
+                      className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    className="text-white hover:text-blue-500 transition-colors cursor-pointer text-[24px]"
+                    onClick={(): Promise<any> => signOut({callbackUrl: '/auth/login'})}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            ) : (
+              <ul className="flex flex-col space-y-4 text-white">
+                {normalLinks.map(({ label, route }) => (
+                  <li key={route}>
+                    <Link
+                      href={route}
+                      className="text-white hover:text-blue-400 hover:transition-[color] text-[24px]"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </nav>
+      <UserOptions
+        isUserCardOpen={isUserCardOpen}
+        onClose={() => setIsUserCardOpen(false)}
+      />
     </>
   );
 }
