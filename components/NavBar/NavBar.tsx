@@ -1,10 +1,11 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { Fragment, useState } from "react";
 import { ThreeBars } from "./ThreeBars";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 import { UserOptions } from "./UserOptions";
+import { LogoutModal } from "./LogoutModal";
 
 interface NavBarLinks {
   label: string;
@@ -73,6 +74,7 @@ export default function NavBar(props: any) {
   const { data } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isUserCardOpen, setIsUserCardOpen] = useState(false);
+  const [logout, setLogout] = useState(false);
 
   const handleUserCard = (): void => {
     setIsUserCardOpen(!isUserCardOpen);
@@ -83,7 +85,7 @@ export default function NavBar(props: any) {
   };
 
   return (
-    <>
+    <Fragment>
       <nav className="fixed top-0 left-0 right-0 z-50 w-[100vw]">
         <div className=" bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg">
           <div className="container mx-auto flex items-center justify-between p-6">
@@ -182,7 +184,10 @@ export default function NavBar(props: any) {
                 <li>
                   <button
                     className="text-white hover:text-blue-500 transition-colors cursor-pointer text-[24px]"
-                    onClick={(): Promise<any> => signOut({callbackUrl: '/auth/login'})}
+                    onClick={() => {
+                      setLogout(true);
+                      setIsOpen(false);
+                    }}
                   >
                     Logout
                   </button>
@@ -207,8 +212,11 @@ export default function NavBar(props: any) {
       </nav>
       <UserOptions
         isUserCardOpen={isUserCardOpen}
+        setIsUserCardOpen={setIsUserCardOpen}
         onClose={() => setIsUserCardOpen(false)}
+        setLogout={setLogout}
       />
-    </>
+      {logout && <LogoutModal logout={logout} setLogout={setLogout} />}
+    </Fragment>
   );
 }
