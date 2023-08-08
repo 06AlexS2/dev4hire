@@ -26,13 +26,13 @@ export const LogoutModal: React.FC<Props> = ({ logout, setLogout }) => {
   return (
     <Fragment>
       <div
-        className={`fixed inset-0 bg-black opacity-40 z-50 ${
+        className={`fixed inset-0 bg-black opacity-40 z-50 overflow-hidden ${
           logout ? "block" : "hidden"
         }`}
       ></div>
       <dialog
         open={logout}
-        className={`flex flex-col items-center justify-center fixed top-[200px] z-[99] w-[90%] md:w-[400px] h-[400px] bg-white bg-opacity-10 backdrop-filter backdrop-blur-md p-4 rounded-md transition-all animate-fade animate-duration-300`}
+        className={`flex flex-col items-center justify-center fixed top-[250px] z-[99] w-[90%] md:w-[400px] h-[200px] bg-white bg-opacity-10 backdrop-filter backdrop-blur-md p-4 rounded-md transition-all animate-fade animate-duration-300`}
       >
         <h3 className="text-white text-2xl text-center">
           Are you sure you want to sign out?
