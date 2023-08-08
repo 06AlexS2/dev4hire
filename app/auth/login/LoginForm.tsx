@@ -1,14 +1,14 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export const LoginForm: React.FC = () => {
   const router = useRouter();
 
-  const [credential, setCredential] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isClicked, setIsClicked] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
@@ -28,25 +28,27 @@ export const LoginForm: React.FC = () => {
   const handleRelease = (): void => {
     setIsClicked(false);
   };
-  const handleSubmit = async (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLogging(true);
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: username,
+      password: password,
+    });
 
-    // try {
-    //     const { data } = await axios.post("/api/register", {
-    //         credential,
-    //         password
-    //       });
-    //       if (data) {
-    //         toast.success("Successfully logged in!");
-    //         setTimeout(() => {
-    //           router.push("/");
-    //         }, 3000);
-    //       }
-    // } catch (error: any) {
-    //   setIsLogging(false);
-    //   toast.error(error.response.data.error);
-    // }
+    if (res?.error) {
+      toast.error(res.error);
+      setIsLogging(false);
+      return 
+    }
+    if (res?.ok && !res.error) {
+      toast.success("Login successful.");
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
+    }
+
   };
 
   return (
@@ -74,9 +76,9 @@ export const LoginForm: React.FC = () => {
               type="text"
               className="border w-full text-base px-8 py-2 mb-2 focus:outline-none focus:ring-0 focus:border-blue-500 rounded-lg bg-transparent text-white"
               placeholder="e.g. narrator@email.com, TylerDurden95"
-              value={credential}
+              value={username}
               id="email_field"
-              onChange={(e) => setCredential(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
 
             <label
@@ -122,7 +124,13 @@ export const LoginForm: React.FC = () => {
             </button>
             <div>
               <h3 className="text-white text-md mt-2">
-                Not a member? <Link className=" text-white hover:text-blue-500 transition-colors" href={"/auth/register"}>Register</Link>
+                Not a member?{" "}
+                <Link
+                  className=" text-white hover:text-blue-500 transition-colors"
+                  href={"/auth/register"}
+                >
+                  Register
+                </Link>
               </h3>
             </div>
           </div>

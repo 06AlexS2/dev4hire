@@ -2,8 +2,9 @@ import NavBar from "@/components/NavBar/NavBar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
+import Providers from "./Providers";
 
-const raleway = Raleway({ weight: '500', subsets: ["latin"] });
+const raleway = Raleway({ weight: "500", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Dev4Hire",
@@ -17,9 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={raleway.className}>
-      <body >
-        <NavBar />
-        {children}
+      <body>
+        <Providers>
+          <NavBar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
